@@ -33,7 +33,7 @@ values."
      markdown
      c-c++
      git
-     gtags
+     ;; gtags
      ibuffer
      ;; org
      cscope
@@ -155,10 +155,10 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
+   dotspacemacs-fullscreen-at-startup t
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
-   dotspacemacs-fullscreen-use-non-native nil
+   dotspacemacs-fullscreen-use-non-native t
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
@@ -201,19 +201,29 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
-  (setq-default delete-by-moving-to-trash nil
-                c-default-style "linux")
+  (setq-default delete-by-moving-to-trash nil)
+
   (global-linum-mode)
 
   (add-hook 'markdown-mode-hook '(lambda () (company-mode -1)))
   (add-hook 'org-mode-hook '(lambda () (company-mode -1)))
+  (add-hook 'c-mode-hook '(lambda () (setq indent-tabs-mode t)))
   )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
- This function is called at the very end of Spacemacs initialization after
+This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-)
+
+  (setq-default indent-tabs-mode nil
+                tab-width 8
+                c-default-style "linux"
+                c-basic-offset 8
+                cscope-option-use-inverted-index t
+                cscope-option-kernel-mode t
+                python-shell-virtualenv-path "~/miniconda3/"
+                )
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
