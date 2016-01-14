@@ -250,6 +250,8 @@ values."
 It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
+  (setq-default git-enable-magit-svn-plugin t
+                git-magit-status-fullscreen t)
   )
 
 (defun dotspacemacs/user-config ()
@@ -257,13 +259,29 @@ in `dotspacemacs/user-config'."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
+  (global-git-commit-mode t)
+  (global-company-mode)
+
+  (add-hook 'markdown-mode-hook '(lambda () (company-mode -1)))
+  (add-hook 'org-mode-hook '(lambda () (company-mode -1)))
+
+  (when (file-directory-p "~/miniconda3")
+    (setq-default python-shell-virtualenv-path "~/miniconda3/"))
+
+  (defun reset-default-directory ()
+    (when (projectile-project-p)
+      (setq default-directory (projectile-project-root))))
+
+  (add-hook 'find-file-hook 'reset-default-directory)
+
   (setq-default indent-tabs-mode nil
                 tab-width 8
                 c-default-style "linux"
                 c-basic-offset 8
+
                 cscope-option-use-inverted-index t
                 cscope-option-kernel-mode t
-                python-shell-virtualenv-path "~/miniconda3/"
+
                 delete-by-moving-to-trash nil
 
                 browse-url-browser-function 'browse-url-generic
@@ -271,11 +289,10 @@ layers configuration. You are free to put any user code."
                 browse-url-generic-program "x-www-browser"
                 )
 
-  (global-company-mode)
-  (add-hook 'markdown-mode-hook '(lambda () (company-mode -1)))
-  (add-hook 'org-mode-hook '(lambda () (company-mode -1)))
-
   (add-hook 'c-mode-hook '(lambda () (setq indent-tabs-mode t)))
+
+  (spacemacs/set-leader-keys "]" 'helm-cscope-find-global-definition)
+  (spacemacs/set-leader-keys "\\s" 'helm-cscope-find-this-symbol)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
