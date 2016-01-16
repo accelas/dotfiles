@@ -32,10 +32,10 @@ values."
      markdown
      org
      (shell :variables
-            shell-default-shell 'eshell
+            shell-default-shell 'ansi-term
             shell-default-height 30
             shell-default-position 'bottom
-            shell-enable-smart-eshell t)
+            )
      ;; spell-checking
      ;; syntax-checking
      version-control
@@ -251,7 +251,9 @@ It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
   (setq-default git-enable-magit-svn-plugin t
-                git-magit-status-fullscreen t)
+                git-magit-status-fullscreen t
+                system-uses-terminfo nil
+                )
   )
 
 (defun dotspacemacs/user-config ()
@@ -264,6 +266,8 @@ layers configuration. You are free to put any user code."
 
   (add-hook 'markdown-mode-hook '(lambda () (company-mode -1)))
   (add-hook 'org-mode-hook '(lambda () (company-mode -1)))
+
+  (add-hook 'shell-pop-in-after-hook '(lambda () (evil-insert-state)))
 
   (when (file-directory-p "~/miniconda3")
     (setq-default python-shell-virtualenv-path "~/miniconda3/"))
@@ -290,7 +294,6 @@ layers configuration. You are free to put any user code."
                 )
 
   (add-hook 'c-mode-hook '(lambda () (setq indent-tabs-mode t)))
-
   (spacemacs/set-leader-keys "]" 'helm-cscope-find-global-definition)
   (spacemacs/set-leader-keys "\\s" 'helm-cscope-find-this-symbol)
   )
